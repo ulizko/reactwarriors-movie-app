@@ -3,7 +3,8 @@ import React from "react";
 export default class MovieItem extends React.Component {
   render() {
     const { item } = this.props;
-    const src = `https://image.tmdb.org/t/p/w500${ item.backdrop_path || item.poster_path }`
+    const src = `https://image.tmdb.org/t/p/w500${item.backdrop_path ||
+      item.poster_path}`;
     return (
       <div className="card" style={{ width: "100%" }}>
         <img
