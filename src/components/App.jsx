@@ -12,6 +12,7 @@ export default class App extends React.Component {
         sort_by: "popularity.desc",
       },
       page: 1,
+      total_pages: 1,
     };
   }
 
@@ -31,8 +32,12 @@ export default class App extends React.Component {
     this.setState({ page });
   };
 
+  setTotalPages = total_pages => {
+    this.setState({ total_pages });
+  };
+
   render() {
-    const { filters, page } = this.state;
+    const { filters, page, total_pages } = this.state;
     return (
       <div className="container">
         <div className="row mt-4">
@@ -45,6 +50,7 @@ export default class App extends React.Component {
                   onChangeFilters={this.onChangeFilters}
                   onChangePage={this.onChangePage}
                   page={page}
+                  total_pages={total_pages}
                 />
               </div>
             </div>
@@ -54,6 +60,7 @@ export default class App extends React.Component {
               filters={filters}
               page={page}
               onChangePage={this.onChangePage}
+              setTotalPages={this.setTotalPages}
             />
           </div>
         </div>

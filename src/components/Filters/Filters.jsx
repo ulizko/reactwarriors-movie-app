@@ -1,6 +1,7 @@
 import React from "react";
 import SortBy from "./SortBy";
 import ByYear from "./ByYear";
+import Pagination from "./Pagination";
 export default class Filters extends React.Component {
   render() {
     const {
@@ -8,32 +9,18 @@ export default class Filters extends React.Component {
       onChangeFilters,
       onChangePage,
       page,
+      total_pages,
     } = this.props;
 
     return (
       <form className="mb-3">
         <SortBy sort_by={sort_by} onChangeFilters={onChangeFilters} />
         <ByYear year={year} onChangeYear={onChangeFilters} />
-        <div className="btn-group">
-          <button
-            type="button"
-            className="btn btn-light"
-            onClick={onChangePage.bind(null, page - 1)}
-            disabled={page === 1}
-          >
-            Назад
-          </button>
-        </div>
-
-        <div className="btn-group">
-          <button
-            type="button"
-            className="btn btn-light"
-            onClick={onChangePage.bind(null, page + 1)}
-          >
-            Вперед
-          </button>
-        </div>
+        <Pagination
+          page={page}
+          onChangePage={onChangePage}
+          total_pages={total_pages}
+        />
       </form>
     );
   }

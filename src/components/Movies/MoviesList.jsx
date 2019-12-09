@@ -37,6 +37,7 @@ export default class MovieList extends Component {
         return response.json();
       })
       .then(data => {
+        this.props.setTotalPages(data.total_pages);
         this.setState({
           movies: data.results,
         });

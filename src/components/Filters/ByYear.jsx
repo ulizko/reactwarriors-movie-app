@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import Select from "../Inputs/Select";
 
 function getYears(from, to) {
-  console.log("years");
   const result = [];
   const fill = (arr, start, end) => {
     if (start > end) {
