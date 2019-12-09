@@ -8,6 +8,7 @@ export default class App extends React.Component {
 
     this.state = {
       filters: {
+        year: 2018,
         sort_by: "popularity.desc",
       },
       page: 1,

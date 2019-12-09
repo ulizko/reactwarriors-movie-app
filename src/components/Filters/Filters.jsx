@@ -1,9 +1,10 @@
 import React from "react";
 import SortBy from "./SortBy";
+import ByYear from "./ByYear";
 export default class Filters extends React.Component {
   render() {
     const {
-      filters: { sort_by },
+      filters: { sort_by, year },
       onChangeFilters,
       onChangePage,
       page,
@@ -12,6 +13,7 @@ export default class Filters extends React.Component {
     return (
       <form className="mb-3">
         <SortBy sort_by={sort_by} onChangeFilters={onChangeFilters} />
+        <ByYear year={year} onChangeYear={onChangeFilters} />
         <div className="btn-group">
           <button
             type="button"
