@@ -1,19 +1,22 @@
 import React from "react";
 import Filters from "./Filters/Filters";
 import MoviesList from "./Movies/MoviesList";
+import Pagination from "./Filters/Pagination";
 
 export default class App extends React.Component {
   constructor() {
     super();
 
-    this.state = {
-      filters: {
+    this.initialFilters = {
         year: 2018,
         sort_by: "popularity.desc",
-      },
+    }
+    this.state = {
+      filters: { ...this.initialFilters },
       page: 1,
       total_pages: 1,
     };
+
   }
 
   onChangeFilters = event => {
@@ -36,6 +39,10 @@ export default class App extends React.Component {
     this.setState({ total_pages });
   };
 
+  resetFilters = () => {
+    this.setState({ filters: this.initialFilters })
+  }
+
   render() {
     const { filters, page, total_pages } = this.state;
     return (
@@ -48,12 +55,15 @@ export default class App extends React.Component {
                 <Filters
                   filters={filters}
                   onChangeFilters={this.onChangeFilters}
-                  onChangePage={this.onChangePage}
-                  page={page}
-                  total_pages={total_pages}
+                  resetFilters={this.resetFilters}
                 />
               </div>
             </div>
+            <Pagination
+              page={page}
+              onChangePage={this.onChangePage}
+              total_pages={total_pages}
+            />
           </div>
           <div className="col-8">
             <MoviesList
