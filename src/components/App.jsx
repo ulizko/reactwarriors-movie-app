@@ -8,15 +8,15 @@ export default class App extends React.Component {
     super();
 
     this.initialFilters = {
-        year: 2018,
-        sort_by: "popularity.desc",
-    }
+      year: 2018,
+      sort_by: "popularity.desc",
+      genres: [],
+    };
     this.state = {
       filters: { ...this.initialFilters },
       page: 1,
       total_pages: 1,
     };
-
   }
 
   onChangeFilters = event => {
@@ -40,8 +40,27 @@ export default class App extends React.Component {
   };
 
   resetFilters = () => {
-    this.setState({ filters: this.initialFilters })
-  }
+    this.setState({ filters: this.initialFilters, page: 1 });
+  };
+
+  onChangeGenre = event => {
+    const id = event.target.value;
+    const { genres } = this.state.filters;
+    let newGenres = [];
+    if (genres.includes(id)) {
+      newGenres = genres.filter(el => el !== id);
+    } else {
+      newGenres = [...genres, id];
+    }
+    this.setState(prevState => {
+      return {
+        filters: {
+          ...prevState.filters,
+          genres: newGenres,
+        },
+      };
+    });
+  };
 
   render() {
     const { filters, page, total_pages } = this.state;
@@ -56,6 +75,7 @@ export default class App extends React.Component {
                   filters={filters}
                   onChangeFilters={this.onChangeFilters}
                   resetFilters={this.resetFilters}
+                  onChangeGenre={this.onChangeGenre}
                 />
               </div>
             </div>

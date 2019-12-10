@@ -1,12 +1,14 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 
 export class Pagination extends Component {
   render() {
     const { page, onChangePage, total_pages } = this.props;
     return (
-      <div className="card" style={{ width: "100%" }}>
+      <div className="card mt-2" style={{ width: "100%" }}>
         <div className="card-body mx-auto">
-        <h6 class="card-title">Страница {page} из {total_pages}</h6>
+          <h6 className="card-title">
+            Страница {page} из {total_pages}
+          </h6>
 
           <div className="btn-group">
             <button
@@ -26,7 +28,6 @@ export class Pagination extends Component {
               Вперед
             </button>
           </div>
-
         </div>
       </div>
     );

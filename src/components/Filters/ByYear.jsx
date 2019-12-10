@@ -5,11 +5,11 @@ import Select from "../Inputs/Select";
 function getYears(from, to) {
   const result = [];
   const fill = (arr, start, end) => {
-    if (start > end) {
+    if (end < start) {
       return arr;
     }
-    arr.push({ value: start, label: start });
-    return fill(arr, start + 1, end);
+    arr.push({ value: end, label: end });
+    return fill(arr, start, end - 1);
   };
 
   return fill(result, from, to);
@@ -17,7 +17,7 @@ function getYears(from, to) {
 
 export class ByYear extends Component {
   static defaultProps = {
-    years: getYears(1950, 2025),
+    years: [{ value: 0, label: "None" }, ...getYears(1950, 2025)],
   };
 
   render() {
