@@ -4,7 +4,7 @@ export class Pagination extends Component {
   render() {
     const { page, onChangePage, total_pages } = this.props;
     return (
-      <div className="card mt-2" style={{ width: "100%" }}>
+      <div className="card mt-2">
         <div className="card-body mx-auto">
           <h6 className="card-title">
             Страница {page} из {total_pages}
