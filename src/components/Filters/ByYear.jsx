@@ -2,22 +2,15 @@ import React, { Component } from "react";
 
 import Select from "../Inputs/Select";
 
-function getYears(from, to) {
-  const result = [];
-  const fill = (arr, start, end) => {
-    if (end < start) {
-      return arr;
-    }
-    arr.push({ value: end, label: end });
-    return fill(arr, start, end - 1);
-  };
-
-  return fill(result, from, to);
+const getYears = (from, to) => {
+  const length = to - from + 1
+  const toYearObj = (year) => ({ value: year, label: year })
+  return Array.from({ length }, (_, index) => toYearObj(to - index))
 }
 
 export class ByYear extends Component {
   static defaultProps = {
-    years: [{ value: 0, label: "None" }, ...getYears(1950, 2025)],
+    years: getYears(1950, 2025)
   };
 
   render() {
@@ -28,6 +21,7 @@ export class ByYear extends Component {
         name="primary_release_year"
         onChange={onChangeYear}
         value={primary_release_year}
+        placeholder='Выберите год'
         labelText="Год выхода:"
         options={years}
       />

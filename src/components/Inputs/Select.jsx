@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 export class Select extends Component {
   render() {
-    const { id, name, labelText, value, onChange, options } = this.props;
+    const { id, name, labelText, value, onChange, options, placeholder } = this.props;
     return (
       <div className="form-group">
         <label htmlFor={id}>{labelText}</label>
@@ -13,6 +13,7 @@ export class Select extends Component {
           value={value}
           onChange={onChange}
         >
+          { placeholder && <option value="">{placeholder}</option> }
           {options.map(option => (
             <option key={option.value} value={option.value}>
               {option.label}
