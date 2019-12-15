@@ -19,6 +19,19 @@ export class Genres extends Component {
       });
   }
 
+  onChangeGenre = event => {
+    const id = event.target.value;
+    const { with_genres } = this.props;
+    let newGenres = [];
+    if (with_genres.includes(id)) {
+      newGenres = with_genres.filter(el => el !== id);
+    } else {
+      newGenres = [...with_genres, id];
+    }
+    const target = { name: 'with_genres', value: newGenres }
+    this.props.onChangeFilters({ target })
+  };
+
   genresToCheckboxes = genres => {
     return genres.map(genre => (
       <Checkbox
@@ -26,8 +39,8 @@ export class Genres extends Component {
         value={genre.id}
         labelText={genre.name}
         name={genre.name}
-        checked={this.props.genres.includes(String(genre.id))}
-        onChange={this.props.onChangeGenre}
+        checked={this.props.with_genres.includes(String(genre.id))}
+        onChange={this.onChangeGenre}
       />
     ));
   };

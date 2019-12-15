@@ -5,17 +5,16 @@ import Genres from "./Genres";
 export default class Filters extends React.Component {
   render() {
     const {
-      filters: { sort_by, year, genres },
+      filters: { sort_by, year, with_genres },
       onChangeFilters,
       resetFilters,
-      onChangeGenre,
     } = this.props;
 
     return (
       <form className="mb-3">
         <SortBy sort_by={sort_by} onChangeFilters={onChangeFilters} />
         <ByYear year={year} onChangeYear={onChangeFilters} />
-        <Genres onChangeGenre={onChangeGenre} genres={genres} />
+        <Genres onChangeFilters={onChangeFilters} with_genres={with_genres} />
         <div className="btn-group mt-2">
           <button
             type="button"
