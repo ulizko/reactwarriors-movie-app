@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import Checkbox from "../Inputs/Checkbox";
 import Loader from '../Loader'
 import { API_URL, API_KEY_3 } from "../../api/api";
 
-export class Genres extends Component {
+export class Genres extends PureComponent {
   constructor() {
     super();
     this.state = { genres: [], loaded: false };
@@ -47,6 +47,7 @@ export class Genres extends Component {
   };
 
   render() {
+    console.log('genres render')
     const { genres, loaded } = this.state;
       return (
         <div className='form-group'>

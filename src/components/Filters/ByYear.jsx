@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 
 import Select from "../Inputs/Select";
 
@@ -8,12 +8,13 @@ const getYears = (from, to) => {
   return Array.from({ length }, (_, index) => toYearObj(to - index))
 }
 
-export class ByYear extends Component {
+export class ByYear extends PureComponent {
   static defaultProps = {
     years: getYears(1950, 2025)
   };
 
   render() {
+    console.log('year render')
     const { primary_release_year, onChangeYear, years } = this.props;
     return (
       <Select

@@ -2,7 +2,7 @@ import React from "react";
 import SortBy from "./SortBy";
 import ByYear from "./ByYear";
 import Genres from "./Genres";
-export default class Filters extends React.Component {
+export default class Filters extends React.PureComponent {
   render() {
     const {
       filters: { sort_by, primary_release_year, with_genres },
