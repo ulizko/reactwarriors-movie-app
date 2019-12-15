@@ -21,13 +21,13 @@ export class ByYear extends Component {
   };
 
   render() {
-    const { year, onChangeYear, years } = this.props;
+    const { primary_release_year, onChangeYear, years } = this.props;
     return (
       <Select
         id="year"
-        name="year"
+        name="primary_release_year"
         onChange={onChangeYear}
-        value={year}
+        value={primary_release_year}
         labelText="Год выхода:"
         options={years}
       />

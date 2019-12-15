@@ -16,11 +16,8 @@ export default class MovieList extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      prevProps.filters.sort_by !== this.props.filters.sort_by ||
-      prevProps.filters.year !== this.props.filters.year ||
-      prevProps.filters.with_genres.length !== this.props.filters.with_genres.length
-    ) {
+    console.log('update')
+    if (prevProps.filters !== this.props.filters) {
       this.props.onChangePage(1);
       this.getMovies(this.props.filters, 1);
     }
@@ -31,9 +28,9 @@ export default class MovieList extends Component {
   }
 
   getMovies = (filters, page) => {
-    const { sort_by, year } = filters;
+    const { sort_by, primary_release_year } = filters;
     const genres = filters.with_genres.join(",");
-    const link = `${API_URL}/discover/movie?api_key=${API_KEY_3}&language=ru-RU&sort_by=${sort_by}&page=${page}&primary_release_year=${year}&with_genres=${genres}`;
+    const link = `${API_URL}/discover/movie?api_key=${API_KEY_3}&language=ru-RU&sort_by=${sort_by}&page=${page}&primary_release_year=${primary_release_year}&with_genres=${genres}`;
     fetch(link)
       .then(response => {
         return response.json();
@@ -47,6 +44,7 @@ export default class MovieList extends Component {
   };
 
   render() {
+    console.log('render')
     const { movies } = this.state;
     return (
       <div className="row">

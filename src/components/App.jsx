@@ -8,7 +8,7 @@ export default class App extends React.Component {
     super();
 
     this.initialFilters = {
-      year: 2018,
+      primary_release_year: 2018,
       sort_by: "popularity.desc",
       with_genres: [],
     };
