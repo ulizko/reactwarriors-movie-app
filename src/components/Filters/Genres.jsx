@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import Checkbox from "../Inputs/Checkbox";
+import Loader from '../Loader'
 import { API_URL, API_KEY_3 } from "../../api/api";
 
 export class Genres extends Component {
   constructor() {
     super();
-    this.state = { genres: [] };
+    this.state = { genres: [], loaded: false };
   }
 
   componentDidMount() {
@@ -15,7 +16,7 @@ export class Genres extends Component {
         return response.json();
       })
       .then(data => {
-        this.setState({ genres: data.genres });
+        this.setState({ genres: data.genres, loaded: true });
       });
   }
 
@@ -46,13 +47,13 @@ export class Genres extends Component {
   };
 
   render() {
-    const { genres } = this.state;
-    return (
-      <div>
-        <h6>По жанру:</h6>
-        {this.genresToCheckboxes(genres)}
-      </div>
-    );
+    const { genres, loaded } = this.state;
+      return (
+        <div className='form-group'>
+          <h6>По жанру:</h6>
+          { loaded ? this.genresToCheckboxes(genres) : <Loader />}
+        </div>
+      );
   }
 }
 

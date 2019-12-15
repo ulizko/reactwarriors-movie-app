@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import queryString from 'query-string'
 import MovieItem from "./MovieItem";
+import Loader from '../Loader'
 import { API_URL, API_KEY_3 } from "../../api/api";
 
 export default class MovieList extends Component {
@@ -9,6 +10,7 @@ export default class MovieList extends Component {
 
     this.state = {
       movies: [],
+      loaded: false
     };
   }
 
@@ -51,22 +53,27 @@ export default class MovieList extends Component {
         this.props.setTotalPages(data.total_pages);
         this.setState({
           movies: data.results,
+          loaded: true
         });
       });
   };
 
+  movieItems = (movies) => {
+    return movies.map(movie => {
+      return (
+        <div key={movie.id} className="col-6 mb-4">
+          <MovieItem item={movie} />
+        </div>
+      );
+    })
+  }
+
   render() {
     console.log('render')
-    const { movies } = this.state;
+    const { movies, loaded } = this.state;
     return (
       <div className="row">
-        {movies.map(movie => {
-          return (
-            <div key={movie.id} className="col-6 mb-4">
-              <MovieItem item={movie} />
-            </div>
-          );
-        })}
+        { loaded ? this.movieItems(movies) : <Loader/> }
       </div>
     );
   }
