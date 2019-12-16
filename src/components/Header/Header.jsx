@@ -7,7 +7,9 @@ export default class Header extends Component {
         <div className="container">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link">Home</a>
+              <a href="#home" className="nav-link">
+                Home
+              </a>
             </li>
           </ul>
         </div>
