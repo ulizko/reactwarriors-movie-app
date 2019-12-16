@@ -1,6 +1,21 @@
 import React, { Component } from "react";
+import { Modal, ModalBody } from "reactstrap";
+import LoginForm from "./LoginForm";
 import { API_URL, API_KEY_3 } from "../../../api/api";
+import { timingSafeEqual } from "crypto";
 export default class Login extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      showModal: false,
+    };
+  }
+
+  toggleModal = () => {
+    this.setState(prevState => ({ showModal: !prevState.showModal }));
+  };
+
   sendPromises = () => {
     const fetchApi = (url, options = {}) => {
       return new Promise((resolve, reject) => {
@@ -61,13 +76,20 @@ export default class Login extends Component {
   };
   render() {
     return (
-      <button
-        className="btn btn-outline-success my-2 my-sm-0"
-        type="button"
-        onClick={this.sendPromises}
-      >
-        Login
-      </button>
+      <React.Fragment>
+        <button
+          className="btn btn-outline-success my-2 my-sm-0"
+          type="button"
+          onClick={this.toggleModal}
+        >
+          Login
+        </button>
+        <Modal isOpen={this.state.showModal} toggle={this.toggleModal}>
+          <ModalBody>
+            <LoginForm></LoginForm>
+          </ModalBody>
+        </Modal>
+      </React.Fragment>
     );
   }
 }
