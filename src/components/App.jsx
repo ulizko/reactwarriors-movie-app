@@ -2,7 +2,7 @@ import React from "react";
 import Filters from "./Filters/Filters";
 import MoviesList from "./Movies/MoviesList";
 import Pagination from "./Filters/Pagination";
-import Header from "./Header";
+import Header from "./Header/Header";
 
 export default class App extends React.Component {
   constructor() {
