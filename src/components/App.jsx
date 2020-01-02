@@ -1,24 +1,34 @@
-import React from "react";
-import Filters from "./Filters/Filters";
-import MoviesList from "./Movies/MoviesList";
-import Pagination from "./Filters/Pagination";
-import Header from "./Header/Header";
+import React from 'react';
+import Filters from './Filters/Filters';
+import MoviesList from './Movies/MoviesList';
+import Pagination from './Filters/Pagination';
+import Header from './Header/Header';
 
 export default class App extends React.Component {
   constructor() {
     super();
 
     this.initialFilters = {
-      primary_release_year: "",
-      sort_by: "popularity.desc",
+      primary_release_year: '',
+      sort_by: 'popularity.desc',
       with_genres: [],
     };
     this.state = {
+      session_id: null,
+      user: null,
       filters: { ...this.initialFilters },
       page: 1,
       total_pages: 1,
     };
   }
+
+  updateUser = user => {
+    this.setState({ user });
+  };
+
+  updateSessionId = session_id => {
+    this.setState({ session_id });
+  };
 
   onChangeFilters = event => {
     const { name, value } = event.target;
@@ -45,10 +55,14 @@ export default class App extends React.Component {
   };
 
   render() {
-    const { filters, page, total_pages } = this.state;
+    const { filters, page, total_pages, user } = this.state;
     return (
       <React.Fragment>
-        <Header />
+        <Header
+          user={user}
+          updateUser={this.updateUser}
+          updateSessionId={this.updateSessionId}
+        />
         <div className="container">
           <div className="row mt-4">
             <div className="col-4">
