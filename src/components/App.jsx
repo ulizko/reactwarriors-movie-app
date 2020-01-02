@@ -1,8 +1,15 @@
 import React from 'react';
+import Cookies from 'universal-cookie';
+
 import Filters from './Filters/Filters';
 import MoviesList from './Movies/MoviesList';
 import Pagination from './Filters/Pagination';
 import Header from './Header/Header';
+
+import { API_URL, API_KEY_3, fetchApi } from '../api/api';
+
+const SECONDS_PER_MONTH = 2592000;
+const cookies = new Cookies();
 
 export default class App extends React.Component {
   constructor() {
@@ -22,11 +29,26 @@ export default class App extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const session_id = cookies.get('session_id');
+    if (session_id) {
+      fetchApi(
+        `${API_URL}/account?api_key=${API_KEY_3}&session_id=${session_id}`
+      ).then(user => {
+        this.updateUser(user);
+      });
+    }
+  }
+
   updateUser = user => {
     this.setState({ user });
   };
 
   updateSessionId = session_id => {
+    cookies.set('session_id', session_id, {
+      path: '/',
+      maxAge: SECONDS_PER_MONTH,
+    });
     this.setState({ session_id });
   };
 

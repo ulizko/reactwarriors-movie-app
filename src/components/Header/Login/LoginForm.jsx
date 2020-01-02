@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { API_URL, API_KEY_3 } from '../../../api/api';
+import { API_URL, API_KEY_3, fetchApi } from '../../../api/api';
 
 export default class LoginForm extends Component {
   constructor() {
@@ -13,27 +13,6 @@ export default class LoginForm extends Component {
   }
 
   onSubmit = () => {
-    const fetchApi = (url, options = {}) => {
-      return new Promise((resolve, reject) => {
-        fetch(url, options)
-          .then(response => {
-            if (response.status < 400) {
-              return response.json();
-            } else {
-              throw response;
-            }
-          })
-          .then(data => {
-            resolve(data);
-          })
-          .catch(data => {
-            data.json().then(error => {
-              reject(error);
-            });
-          });
-      });
-    };
-
     this.setState({ submitting: true });
 
     fetchApi(`${API_URL}/authentication/token/new?api_key=${API_KEY_3}`)
