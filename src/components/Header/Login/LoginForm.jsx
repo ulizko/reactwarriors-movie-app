@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classNames from 'classnames';
 import { API_URL, API_KEY_3, fetchApi } from '../../../api/api';
 
 export default class LoginForm extends Component {
@@ -8,6 +9,7 @@ export default class LoginForm extends Component {
       submitting: false,
       username: '',
       password: '',
+      repeatPassword: '',
       errors: {},
     };
   }
@@ -56,7 +58,6 @@ export default class LoginForm extends Component {
       })
       .then(user => {
         this.setState({ submitting: false });
-        console.log(user);
         this.props.updateUser(user);
       })
       .catch(error => {
@@ -66,7 +67,6 @@ export default class LoginForm extends Component {
             base: error.status_message,
           },
         });
-        console.log('error', error);
       });
   };
 
@@ -81,13 +81,14 @@ export default class LoginForm extends Component {
   };
 
   handleBlur = event => {
+    const name = event.target.name;
     const errors = this.validateFields();
     if (Object.keys(errors).length) {
       this.setState(prevState => {
         return {
           errors: {
             ...prevState.errors,
-            ...errors,
+            [name]: errors[name],
           },
         };
       });
@@ -95,10 +96,17 @@ export default class LoginForm extends Component {
   };
 
   validateFields = () => {
+    const { username, password, repeatPassword } = this.state;
     const errors = {};
 
-    if (!this.state.username) {
+    if (!username) {
       errors.username = 'Not empty';
+    }
+    if (!password) {
+      errors.password = 'Not empty';
+    }
+    if (password !== repeatPassword) {
+      errors.repeatPassword = 'Must to equal password';
     }
 
     return errors;
@@ -115,7 +123,26 @@ export default class LoginForm extends Component {
   };
 
   render() {
-    const { username, password, errors, submitting } = this.state;
+    const {
+      username,
+      password,
+      repeatPassword,
+      errors,
+      submitting,
+    } = this.state;
+
+    const inputClasses = {
+      username: classNames('form-control', {
+        'is-invalid': errors.username,
+      }),
+      password: classNames('form-control', {
+        'is-invalid': errors.password,
+      }),
+      repeatPassword: classNames('form-control', {
+        'is-invalid': errors.repeatPassword,
+      }),
+    };
+
     return (
       <form>
         <h1 className="h3 mb-3 font-weight-normal text-center">Авторизация</h1>
@@ -123,7 +150,7 @@ export default class LoginForm extends Component {
           <label htmlFor="email">Пользователь</label>
           <input
             type="text"
-            className="form-control"
+            className={inputClasses.username}
             id="username"
             name="username"
             aria-describedby="emailHelp"
@@ -140,13 +167,33 @@ export default class LoginForm extends Component {
           <label htmlFor="password">Пароль</label>
           <input
             type="password"
-            className="form-control"
+            className={inputClasses.password}
             id="password"
             name="password"
             placeholder="Пароль"
             value={password}
             onChange={this.onChange}
+            onBlur={this.handleBlur}
           />
+          {errors.password && (
+            <div className="invalid-feedback">{errors.password}</div>
+          )}
+        </div>
+        <div className="form-group">
+          <label htmlFor="repeatPassword">Повторите Пароль</label>
+          <input
+            type="password"
+            className={inputClasses.repeatPassword}
+            id="repeatPassword"
+            name="repeatPassword"
+            placeholder="Пароль"
+            value={repeatPassword}
+            onChange={this.onChange}
+            onBlur={this.handleBlur}
+          />
+          {errors.repeatPassword && (
+            <div className="invalid-feedback">{errors.repeatPassword}</div>
+          )}
         </div>
         <button
           type="submit"
