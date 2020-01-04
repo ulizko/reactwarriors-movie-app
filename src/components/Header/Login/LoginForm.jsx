@@ -83,12 +83,14 @@ export default class LoginForm extends Component {
   handleBlur = event => {
     const name = event.target.name;
     const errors = this.validateFields();
+    const error = errors[name];
+
     if (Object.keys(errors).length) {
       this.setState(prevState => {
         return {
           errors: {
             ...prevState.errors,
-            [name]: errors[name],
+            [name]: error,
           },
         };
       });
