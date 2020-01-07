@@ -2,7 +2,7 @@ import React from 'react';
 import Cookies from 'universal-cookie';
 
 import Filters from './Filters/Filters';
-import MoviesList from './Movies/MoviesList';
+import MoviesContainer from './Movies/MoviesContainer';
 import Pagination from './Filters/Pagination';
 import Header from './Header/Header';
 
@@ -105,7 +105,7 @@ export default class App extends React.Component {
               />
             </div>
             <div className="col-8">
-              <MoviesList
+              <MoviesContainer
                 filters={filters}
                 page={page}
                 onChangePage={this.onChangePage}
