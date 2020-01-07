@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Checkbox from '../Inputs/Checkbox';
+import GenresHOC from './GenresHOC';
 
 const Genres = ({ genres, onChangeGenre, with_genres }) => {
   return (
@@ -30,4 +31,4 @@ Genres.propTypes = {
   with_genres: PropTypes.array,
   onChangeGenre: PropTypes.func,
 };
-export default Genres;
+export default GenresHOC(Genres);

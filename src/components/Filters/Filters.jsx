@@ -1,7 +1,7 @@
 import React from 'react';
 import SortBy from './SortBy';
 import ByYear from './ByYear';
-import GenresContainer from './GenresContainer';
+import Genres from './Genres';
 export default class Filters extends React.PureComponent {
   render() {
     const {
@@ -17,10 +17,7 @@ export default class Filters extends React.PureComponent {
           primary_release_year={primary_release_year}
           onChangeYear={onChangeFilters}
         />
-        <GenresContainer
-          onChangeFilters={onChangeFilters}
-          with_genres={with_genres}
-        />
+        <Genres onChangeFilters={onChangeFilters} with_genres={with_genres} />
         <div className="btn-group mt-2">
           <button
             type="button"
