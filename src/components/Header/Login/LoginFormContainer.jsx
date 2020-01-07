@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { API_URL, API_KEY_3, fetchApi } from '../../../api/api';
 import LoginForm from './LoginForm';
-import { AppContext } from '../../App';
+import AppContextHOC from '../../HOC/AppConextHOC';
 
 class LoginFormContainer extends Component {
   constructor() {
@@ -149,21 +149,4 @@ class LoginFormContainer extends Component {
   }
 }
 
-const LoginFormContainerWithContext = () => {
-  return (
-    <AppContext.Consumer>
-      {context => {
-        return (
-          <LoginFormContainer
-            updateUser={context.updateUser}
-            updateSessionId={context.updateSessionId}
-          />
-        );
-      }}
-    </AppContext.Consumer>
-  );
-};
-
-export default LoginFormContainerWithContext;
-
-LoginFormContainerWithContext.displayName = 'LoginFormContainerWithContext';
+export default AppContextHOC(LoginFormContainer);
