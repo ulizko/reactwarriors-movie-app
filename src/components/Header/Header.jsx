@@ -1,7 +1,9 @@
-import React, { Component } from "react";
-import Login from "./Login/Login";
+import React, { Component } from 'react';
+import Login from './Login/Login';
+import User from './User';
 export default class Header extends Component {
   render() {
+    const { user, updateUser, updateSessionId } = this.props;
     return (
       <nav className="navbar navbar-dark bg-dark">
         <div className="container">
@@ -12,8 +14,12 @@ export default class Header extends Component {
               </a>
             </li>
           </ul>
+          {user ? (
+            <User user={user} />
+          ) : (
+            <Login updateUser={updateUser} updateSessionId={updateSessionId} />
+          )}
         </div>
-        <Login />
       </nav>
     );
   }
