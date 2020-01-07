@@ -11,6 +11,8 @@ import { API_URL, API_KEY_3, fetchApi } from '../api/api';
 const SECONDS_PER_MONTH = 2592000;
 const cookies = new Cookies();
 
+export const AppContext = React.createContext();
+
 export default class App extends React.Component {
   constructor() {
     super();
@@ -79,12 +81,14 @@ export default class App extends React.Component {
   render() {
     const { filters, page, total_pages, user } = this.state;
     return (
-      <React.Fragment>
-        <Header
-          user={user}
-          updateUser={this.updateUser}
-          updateSessionId={this.updateSessionId}
-        />
+      <AppContext.Provider
+        value={{
+          user,
+          updateUser: this.updateUser,
+          updateSessionId: this.updateSessionId,
+        }}
+      >
+        <Header user={user} />
         <div className="container">
           <div className="row mt-4">
             <div className="col-4">
@@ -114,7 +118,7 @@ export default class App extends React.Component {
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </AppContext.Provider>
     );
   }
 }

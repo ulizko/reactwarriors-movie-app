@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-
-export default class User extends Component {
+import { AppContext } from '../App';
+class User extends Component {
   render() {
     const { user } = this.props;
     return (
@@ -15,3 +15,17 @@ export default class User extends Component {
     );
   }
 }
+
+const UserContainer = () => {
+  return (
+    <AppContext.Consumer>
+      {context => {
+        return <User user={context.user} />;
+      }}
+    </AppContext.Consumer>
+  );
+};
+
+UserContainer.displayName = 'UserContainer';
+
+export default UserContainer;

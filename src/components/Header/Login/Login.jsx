@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, ModalBody } from 'reactstrap';
-import LoginForm from './LoginForm';
+import LoginFormContainer from './LoginFormContainer';
+
 export default class Login extends Component {
   constructor() {
     super();
@@ -26,10 +27,7 @@ export default class Login extends Component {
         </button>
         <Modal isOpen={this.state.showModal} toggle={this.toggleModal}>
           <ModalBody>
-            <LoginForm
-              updateUser={this.props.updateUser}
-              updateSessionId={this.props.updateSessionId}
-            ></LoginForm>
+            <LoginFormContainer />
           </ModalBody>
         </Modal>
       </React.Fragment>
