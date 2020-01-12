@@ -38,6 +38,7 @@ export default class App extends React.Component {
         `${API_URL}/account?api_key=${API_KEY_3}&session_id=${session_id}`
       ).then(user => {
         this.updateUser(user);
+        this.updateSessionId(session_id);
       });
     }
   }
@@ -52,6 +53,18 @@ export default class App extends React.Component {
       maxAge: SECONDS_PER_MONTH,
     });
     this.setState({ session_id });
+  };
+
+  onLogOut = () => {
+    this.setState(
+      {
+        user: null,
+        session_id: null,
+      },
+      () => {
+        cookies.remove('session_id');
+      }
+    );
   };
 
   onChangeFilters = event => {
@@ -86,6 +99,8 @@ export default class App extends React.Component {
           user,
           updateUser: this.updateUser,
           updateSessionId: this.updateSessionId,
+          onLogOut: this.onLogOut,
+          session_id: this.state.session_id,
         }}
       >
         <Header user={user} />
