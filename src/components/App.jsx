@@ -6,7 +6,7 @@ import MoviesList from './Movies/MoviesList';
 import Pagination from './Filters/Pagination';
 import Header from './Header/Header';
 
-import { API_URL, API_KEY_3, fetchApi } from '../api/api';
+import CallApi from '../api/api';
 
 const SECONDS_PER_MONTH = 2592000;
 const cookies = new Cookies();
@@ -34,9 +34,7 @@ export default class App extends React.Component {
   componentDidMount() {
     const session_id = cookies.get('session_id');
     if (session_id) {
-      fetchApi(
-        `${API_URL}/account?api_key=${API_KEY_3}&session_id=${session_id}`
-      ).then(user => {
+      CallApi.get('/account', { params: { session_id } }).then(user => {
         this.updateUser(user);
         this.updateSessionId(session_id);
       });

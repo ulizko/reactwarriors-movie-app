@@ -5,7 +5,7 @@ import {
   DropdownMenu,
   DropdownItem,
 } from 'reactstrap';
-import { API_URL, API_KEY_3, fetchApi } from '../../api/api';
+import CallApi from '../../api/api';
 
 import AppContextHOC from '../HOC/AppConextHOC';
 
@@ -27,15 +27,8 @@ class UserMenu extends Component {
   };
 
   handleLogOut = () => {
-    fetchApi(`${API_URL}/authentication/session?api_key=${API_KEY_3}`, {
-      method: 'DELETE',
-      mode: 'cors',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        session_id: this.props.session_id,
-      }),
+    CallApi.delete('/authentication/session', {
+      body: { session_id: this.props.session_id },
     }).then(_data => {
       this.props.onLogOut();
     });

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { API_URL, API_KEY_3, fetchApi } from '../../../api/api';
+import CallApi from '../../../api/api';
+
 import LoginForm from './LoginForm';
 import AppContextHOC from '../../HOC/AppConextHOC';
 
@@ -17,45 +18,25 @@ class LoginFormContainer extends Component {
 
   onSubmit = () => {
     this.setState({ submitting: true });
-
-    fetchApi(`${API_URL}/authentication/token/new?api_key=${API_KEY_3}`)
+    CallApi.get('/authentication/token/new')
       .then(data => {
-        return fetchApi(
-          `${API_URL}/authentication/token/validate_with_login?api_key=${API_KEY_3}`,
-          {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-              'Content-type': 'application/json',
-            },
-            body: JSON.stringify({
-              username: this.state.username,
-              password: this.state.password,
-              request_token: data.request_token,
-            }),
-          }
-        );
+        const body = {
+          username: this.state.username,
+          password: this.state.password,
+          request_token: data.request_token,
+        };
+        return CallApi.post('/authentication/token/validate_with_login', {
+          body,
+        });
       })
-      .then(data => {
-        return fetchApi(
-          `${API_URL}/authentication/session/new?api_key=${API_KEY_3}`,
-          {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-              'Content-type': 'application/json',
-            },
-            body: JSON.stringify({
-              request_token: data.request_token,
-            }),
-          }
-        );
+      .then(({ request_token }) => {
+        return CallApi.post('/authentication/session/new', {
+          body: { request_token },
+        });
       })
-      .then(data => {
-        this.props.updateSessionId(data.session_id);
-        return fetchApi(
-          `${API_URL}/account?api_key=${API_KEY_3}&session_id=${data.session_id}`
-        );
+      .then(({ session_id }) => {
+        this.props.updateSessionId(session_id);
+        return CallApi.get('/account', { params: { session_id } });
       })
       .then(user => {
         this.setState({ submitting: false });

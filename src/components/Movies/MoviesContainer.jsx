@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import queryString from 'query-string';
 import Loader from '../Loader';
-import { API_URL, API_KEY_3 } from '../../api/api';
+import CallApi from '../../api/api';
 import MovieList from './MoviesList';
 
 export default class MoviesContainer extends Component {
@@ -33,8 +32,6 @@ export default class MoviesContainer extends Component {
   getMovies = (filters, page) => {
     const { sort_by, primary_release_year, with_genres } = filters;
     const queryParams = {
-      api_key: API_KEY_3,
-      language: 'ru-Ru',
       sort_by,
       page,
       primary_release_year,
@@ -44,18 +41,13 @@ export default class MoviesContainer extends Component {
       queryParams.with_genres = with_genres.join(',');
     }
 
-    const queryStringParams = queryString.stringify(queryParams);
-    const link = `${API_URL}/discover/movie?${queryStringParams}`;
-
-    fetch(link)
-      .then(response => response.json())
-      .then(data => {
-        this.props.setTotalPages(data.total_pages);
-        this.setState({
-          movies: data.results,
-          loaded: true,
-        });
+    CallApi.get('/discover/movie', queryParams).then(data => {
+      this.props.setTotalPages(data.total_pages);
+      this.setState({
+        movies: data.results,
+        loaded: true,
       });
+    });
   };
 
   render() {
