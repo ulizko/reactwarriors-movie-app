@@ -28,6 +28,9 @@ export default class App extends React.Component {
       filters: { ...this.initialFilters },
       page: 1,
       total_pages: 1,
+      favorites: [],
+      bookmarks: [],
+      openLoginForm: false,
     };
   }
 
@@ -35,14 +38,35 @@ export default class App extends React.Component {
     const session_id = cookies.get('session_id');
     if (session_id) {
       CallApi.get('/account', { params: { session_id } }).then(user => {
-        this.updateUser(user);
         this.updateSessionId(session_id);
+        this.updateUser(user);
       });
     }
   }
 
+  getFavorites = user => {
+    const { session_id } = this.state;
+    CallApi.get(`/account/${user.id}/favorite/movies`, {
+      params: { session_id },
+    }).then(data => {
+      this.setState({ favorites: data.results });
+    });
+  };
+
+  getBookmarks = user => {
+    const { session_id } = this.state;
+    CallApi.get(`/account/${user.id}/watchlist/movies`, {
+      params: { session_id },
+    }).then(data => {
+      this.setState({ bookmarks: data.results });
+    });
+  };
+
   updateUser = user => {
-    this.setState({ user });
+    this.setState({ user }, () => {
+      this.getFavorites(user);
+      this.getBookmarks(user);
+    });
   };
 
   updateSessionId = session_id => {
@@ -58,6 +82,8 @@ export default class App extends React.Component {
       {
         user: null,
         session_id: null,
+        favorites: [],
+        bookmarks: [],
       },
       () => {
         cookies.remove('session_id');
@@ -89,8 +115,94 @@ export default class App extends React.Component {
     this.setState({ filters: this.initialFilters, page: 1 });
   };
 
+  markAsFavorite = (item, isFavorite) => {
+    const { session_id, user } = this.state;
+    return CallApi.post(`/account/${user.id}/favorite`, {
+      params: { session_id },
+      body: { media_type: 'movie', media_id: item.id, favorite: isFavorite },
+    });
+  };
+
+  removeFromFavorite = item => {
+    if (this.state.user) {
+      this.markAsFavorite(item, false).then(data => {
+        const newState = this.state.favorites.filter(
+          favorite => favorite.id !== item.id
+        );
+        this.setState({ favorites: newState });
+      });
+    } else {
+      this.requireAutorization();
+    }
+  };
+
+  addToFavorite = movie => {
+    if (this.state.user) {
+      this.markAsFavorite(movie, true).then(data => {
+        this.setState(prevState => {
+          return {
+            favorites: [...prevState.favorites, movie],
+          };
+        });
+      });
+    } else {
+      this.requireAutorization();
+    }
+  };
+
+  markAsBookmark = (item, isBookmark) => {
+    const { session_id, user } = this.state;
+    return CallApi.post(`/account/${user.id}/watchlist`, {
+      params: { session_id },
+      body: { media_type: 'movie', media_id: item.id, watchlist: isBookmark },
+    });
+  };
+
+  removeFromBookmark = item => {
+    if (this.state.user) {
+      this.markAsBookmark(item, false).then(data => {
+        const newState = this.state.bookmarks.filter(
+          bookmark => bookmark.id !== item.id
+        );
+        this.setState({ bookmarks: newState });
+      });
+    } else {
+      this.requireAutorization();
+    }
+  };
+
+  addToBookmark = movie => {
+    if (this.state.user) {
+      this.markAsBookmark(movie, true).then(data => {
+        this.setState(prevState => {
+          return {
+            bookmarks: [...prevState.bookmarks, movie],
+          };
+        });
+      });
+    } else {
+      this.requireAutorization();
+    }
+  };
+
+  requireAutorization = () => {
+    this.setState({ openLoginForm: true });
+  };
+
+  toggleModal = () => {
+    this.setState(prevState => ({ openLoginForm: !prevState.openLoginForm }));
+  };
+
   render() {
-    const { filters, page, total_pages, user } = this.state;
+    const {
+      filters,
+      page,
+      total_pages,
+      user,
+      favorites,
+      bookmarks,
+      openLoginForm,
+    } = this.state;
     return (
       <AppContext.Provider
         value={{
@@ -99,9 +211,19 @@ export default class App extends React.Component {
           updateSessionId: this.updateSessionId,
           onLogOut: this.onLogOut,
           session_id: this.state.session_id,
+          favorites: favorites,
+          bookmarks: bookmarks,
+          removeFromFavorite: this.removeFromFavorite,
+          addToFavorite: this.addToFavorite,
+          removeFromBookmark: this.removeFromBookmark,
+          addToBookmark: this.addToBookmark,
         }}
       >
-        <Header user={user} />
+        <Header
+          user={user}
+          openLoginForm={openLoginForm}
+          toggleModal={this.toggleModal}
+        />
         <div className="container">
           <div className="row mt-4">
             <div className="col-4">

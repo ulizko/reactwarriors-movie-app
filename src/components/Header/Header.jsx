@@ -3,7 +3,7 @@ import Login from './Login/Login';
 import UserMenu from './UserMenu';
 export default class Header extends Component {
   render() {
-    const { user } = this.props;
+    const { user, openLoginForm, toggleModal } = this.props;
     return (
       <nav className="navbar navbar-dark bg-dark">
         <div className="container">
@@ -14,7 +14,11 @@ export default class Header extends Component {
               </a>
             </li>
           </ul>
-          {user ? <UserMenu /> : <Login />}
+          {user ? (
+            <UserMenu />
+          ) : (
+            <Login isOpen={openLoginForm} toggleModal={toggleModal} />
+          )}
         </div>
       </nav>
     );

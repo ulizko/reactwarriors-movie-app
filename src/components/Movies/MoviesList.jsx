@@ -1,5 +1,5 @@
 import React from 'react';
-import MovieItem from './MovieItem';
+import MovieItemContainer from './MovieItemContainer';
 import MoviesHOC from './MoviesHOC';
 import PropTypes from 'prop-types';
 
@@ -9,7 +9,7 @@ const MoviesList = ({ movies }) => {
       {movies.map(movie => {
         return (
           <div key={movie.id} className="col-6 mb-4">
-            <MovieItem item={movie} />
+            <MovieItemContainer item={movie} />
           </div>
         );
       })}
