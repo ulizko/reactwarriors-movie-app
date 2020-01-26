@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Login from './Login/Login';
+import LoginButton from './Login/LoginButton';
 import UserMenu from './UserMenu';
 export default class Header extends Component {
   render() {
-    const { user, openLoginForm, toggleModal } = this.props;
+    const { user, toggleModal } = this.props;
     return (
       <nav className="navbar navbar-dark bg-dark">
         <div className="container">
@@ -14,11 +14,7 @@ export default class Header extends Component {
               </a>
             </li>
           </ul>
-          {user ? (
-            <UserMenu />
-          ) : (
-            <Login isOpen={openLoginForm} toggleModal={toggleModal} />
-          )}
+          {user ? <UserMenu /> : <LoginButton toggleModal={toggleModal} />}
         </div>
       </nav>
     );

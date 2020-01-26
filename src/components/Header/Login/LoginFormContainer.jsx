@@ -9,20 +9,23 @@ class LoginFormContainer extends Component {
     super();
     this.state = {
       submitting: false,
-      username: '',
-      password: '',
-      repeatPassword: '',
+      values: {
+        username: '',
+        password: '',
+        repeatPassword: '',
+      },
       errors: {},
     };
   }
 
   onSubmit = () => {
     this.setState({ submitting: true });
+    const { username, password } = this.state.values;
     CallApi.get('/authentication/token/new')
       .then(data => {
         const body = {
-          username: this.state.username,
-          password: this.state.password,
+          username,
+          password,
           request_token: data.request_token,
         };
         return CallApi.post('/authentication/token/validate_with_login', {
@@ -56,7 +59,7 @@ class LoginFormContainer extends Component {
     const { name, value } = event.target;
     this.setState(prevState => {
       return {
-        [name]: value,
+        values: { ...prevState.values, [name]: value },
         errors: { ...prevState.errors, [name]: null, base: null },
       };
     });
@@ -80,7 +83,7 @@ class LoginFormContainer extends Component {
   };
 
   validateFields = () => {
-    const { username, password, repeatPassword } = this.state;
+    const { username, password, repeatPassword } = this.state.values;
     const errors = {};
 
     if (!username) {
@@ -107,19 +110,11 @@ class LoginFormContainer extends Component {
   };
 
   render() {
-    const {
-      username,
-      password,
-      repeatPassword,
-      errors,
-      submitting,
-    } = this.state;
+    const { values, errors, submitting } = this.state;
 
     return (
       <LoginForm
-        username={username}
-        password={password}
-        repeatPassword={repeatPassword}
+        values={values}
         errors={errors}
         submitting={submitting}
         onLogin={this.onLogin}

@@ -4,17 +4,11 @@ import BookmarkButton from './BookmarkButton';
 
 export default class MovieItem extends React.Component {
   render() {
-    const {
-      item,
-      isFavorite,
-      isBookmark,
-      toggleFavorite,
-      toggleBookmark,
-    } = this.props;
+    const { item } = this.props;
     const src = `https://image.tmdb.org/t/p/w500${item.backdrop_path ||
       item.poster_path}`;
     return (
-      <div className="card">
+      <div className="card movie-item">
         <img
           className="card-img-top card-img--height"
           src={src}
@@ -22,24 +16,11 @@ export default class MovieItem extends React.Component {
         />
         <div className="card-body">
           <h6 className="card-title">{item.title}</h6>
-          <div className="card-text" style={{ position: 'relative' }}>
+          <div className="card-text">
             Рейтинг: {item.vote_average}
-            <div
-              className="icons"
-              style={{
-                position: 'absolute',
-                bottom: -10,
-                right: 0,
-              }}
-            >
-              <FavoriteButton
-                isFavorite={isFavorite}
-                toggleFavorite={toggleFavorite}
-              />
-              <BookmarkButton
-                isBookmark={isBookmark}
-                toggleBookmark={toggleBookmark}
-              />
+            <div className="icons">
+              <FavoriteButton movie={item} />
+              <BookmarkButton movie={item} />
             </div>
           </div>
         </div>

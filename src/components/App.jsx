@@ -5,6 +5,7 @@ import Filters from './Filters/Filters';
 import MoviesList from './Movies/MoviesList';
 import Pagination from './Filters/Pagination';
 import Header from './Header/Header';
+import LoginModal from './Header/Login/LoginModal';
 
 import CallApi from '../api/api';
 
@@ -63,7 +64,7 @@ export default class App extends React.Component {
   };
 
   updateUser = user => {
-    this.setState({ user }, () => {
+    this.setState({ user, openLoginForm: false }, () => {
       this.getFavorites(user);
       this.getBookmarks(user);
     });
@@ -115,79 +116,9 @@ export default class App extends React.Component {
     this.setState({ filters: this.initialFilters, page: 1 });
   };
 
-  markAsFavorite = (item, isFavorite) => {
-    const { session_id, user } = this.state;
-    return CallApi.post(`/account/${user.id}/favorite`, {
-      params: { session_id },
-      body: { media_type: 'movie', media_id: item.id, favorite: isFavorite },
-    });
-  };
+  updateFavorites = favorites => this.setState({ favorites });
 
-  removeFromFavorite = item => {
-    if (this.state.user) {
-      this.markAsFavorite(item, false).then(data => {
-        const newState = this.state.favorites.filter(
-          favorite => favorite.id !== item.id
-        );
-        this.setState({ favorites: newState });
-      });
-    } else {
-      this.requireAutorization();
-    }
-  };
-
-  addToFavorite = movie => {
-    if (this.state.user) {
-      this.markAsFavorite(movie, true).then(data => {
-        this.setState(prevState => {
-          return {
-            favorites: [...prevState.favorites, movie],
-          };
-        });
-      });
-    } else {
-      this.requireAutorization();
-    }
-  };
-
-  markAsBookmark = (item, isBookmark) => {
-    const { session_id, user } = this.state;
-    return CallApi.post(`/account/${user.id}/watchlist`, {
-      params: { session_id },
-      body: { media_type: 'movie', media_id: item.id, watchlist: isBookmark },
-    });
-  };
-
-  removeFromBookmark = item => {
-    if (this.state.user) {
-      this.markAsBookmark(item, false).then(data => {
-        const newState = this.state.bookmarks.filter(
-          bookmark => bookmark.id !== item.id
-        );
-        this.setState({ bookmarks: newState });
-      });
-    } else {
-      this.requireAutorization();
-    }
-  };
-
-  addToBookmark = movie => {
-    if (this.state.user) {
-      this.markAsBookmark(movie, true).then(data => {
-        this.setState(prevState => {
-          return {
-            bookmarks: [...prevState.bookmarks, movie],
-          };
-        });
-      });
-    } else {
-      this.requireAutorization();
-    }
-  };
-
-  requireAutorization = () => {
-    this.setState({ openLoginForm: true });
-  };
+  updateBookmarks = bookmarks => this.setState({ bookmarks });
 
   toggleModal = () => {
     this.setState(prevState => ({ openLoginForm: !prevState.openLoginForm }));
@@ -213,17 +144,13 @@ export default class App extends React.Component {
           session_id: this.state.session_id,
           favorites: favorites,
           bookmarks: bookmarks,
-          removeFromFavorite: this.removeFromFavorite,
-          addToFavorite: this.addToFavorite,
-          removeFromBookmark: this.removeFromBookmark,
-          addToBookmark: this.addToBookmark,
+          toggleModal: this.toggleModal,
+          updateBookmarks: this.updateBookmarks,
+          updateFavorites: this.updateFavorites,
         }}
       >
-        <Header
-          user={user}
-          openLoginForm={openLoginForm}
-          toggleModal={this.toggleModal}
-        />
+        <Header user={user} toggleModal={this.toggleModal} />
+        <LoginModal isOpen={openLoginForm} toggleModal={this.toggleModal} />
         <div className="container">
           <div className="row mt-4">
             <div className="col-4">

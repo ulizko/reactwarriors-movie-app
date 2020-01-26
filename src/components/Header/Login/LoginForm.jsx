@@ -3,16 +3,7 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 const LoginForm = props => {
-  const {
-    errors,
-    username,
-    password,
-    repeatPassword,
-    submitting,
-    onChange,
-    handleBlur,
-    onLogin,
-  } = props;
+  const { errors, values, submitting, onChange, handleBlur, onLogin } = props;
 
   const inputClasses = {
     username: classNames('form-control', {
@@ -38,7 +29,7 @@ const LoginForm = props => {
           name="username"
           aria-describedby="emailHelp"
           placeholder="Пользователь"
-          value={username}
+          value={values.username}
           onChange={onChange}
           onBlur={handleBlur}
         />
@@ -54,7 +45,7 @@ const LoginForm = props => {
           id="password"
           name="password"
           placeholder="Пароль"
-          value={password}
+          value={values.password}
           onChange={onChange}
           onBlur={handleBlur}
         />
@@ -70,7 +61,7 @@ const LoginForm = props => {
           id="repeatPassword"
           name="repeatPassword"
           placeholder="Пароль"
-          value={repeatPassword}
+          value={values.repeatPassword}
           onChange={onChange}
           onBlur={handleBlur}
         />
@@ -95,17 +86,21 @@ const LoginForm = props => {
 
 LoginForm.defaultProps = {
   errors: {},
-  username: '',
-  password: '',
-  repeatPassword: '',
+  values: {
+    username: '',
+    password: '',
+    repeatPassword: '',
+  },
   submitting: false,
 };
 
 LoginForm.propTypes = {
   errors: PropTypes.object,
-  username: PropTypes.string,
-  password: PropTypes.string,
-  repeatPassword: PropTypes.string,
+  values: PropTypes.shape({
+    username: PropTypes.string,
+    password: PropTypes.string,
+    repeatPassword: PropTypes.string,
+  }),
   submitting: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   handleBlur: PropTypes.func.isRequired,
