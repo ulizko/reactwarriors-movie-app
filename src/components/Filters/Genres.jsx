@@ -1,61 +1,34 @@
-import React, { PureComponent } from "react";
-import Checkbox from "../Inputs/Checkbox";
-import Loader from '../Loader'
-import { API_URL, API_KEY_3 } from "../../api/api";
+import React from 'react';
+import PropTypes from 'prop-types';
+import Checkbox from '../Inputs/Checkbox';
+import GenresHOC from './GenresHOC';
 
-export class Genres extends PureComponent {
-  constructor() {
-    super();
-    this.state = { genres: [], loaded: false };
-  }
+const Genres = ({ genres, onChangeGenre, with_genres }) => {
+  return (
+    <div className="form-group">
+      <h6>По жанру:</h6>
+      {genres.map(genre => (
+        <Checkbox
+          key={genre.id}
+          value={genre.id}
+          labelText={genre.name}
+          name={genre.name}
+          checked={with_genres.includes(String(genre.id))}
+          onChange={onChangeGenre}
+        />
+      ))}
+    </div>
+  );
+};
 
-  componentDidMount() {
-    const link = `${API_URL}/genre/movie/list?api_key=${API_KEY_3}&language=ru-RU`;
-    fetch(link)
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        this.setState({ genres: data.genres, loaded: true });
-      });
-  }
+Genres.defaultProps = {
+  genres: [],
+  with_genres: [],
+};
 
-  onChangeGenre = event => {
-    const id = event.target.value;
-    const { with_genres } = this.props;
-    let newGenres = [];
-    if (with_genres.includes(id)) {
-      newGenres = with_genres.filter(el => el !== id);
-    } else {
-      newGenres = [...with_genres, id];
-    }
-    const target = { name: 'with_genres', value: newGenres }
-    this.props.onChangeFilters({ target })
-  };
-
-  genresToCheckboxes = genres => {
-    return genres.map(genre => (
-      <Checkbox
-        key={genre.id}
-        value={genre.id}
-        labelText={genre.name}
-        name={genre.name}
-        checked={this.props.with_genres.includes(String(genre.id))}
-        onChange={this.onChangeGenre}
-      />
-    ));
-  };
-
-  render() {
-    console.log('genres render')
-    const { genres, loaded } = this.state;
-      return (
-        <div className='form-group'>
-          <h6>По жанру:</h6>
-          { loaded ? this.genresToCheckboxes(genres) : <Loader />}
-        </div>
-      );
-  }
-}
-
-export default Genres;
+Genres.propTypes = {
+  genres: PropTypes.array.isRequired,
+  with_genres: PropTypes.array,
+  onChangeGenre: PropTypes.func,
+};
+export default GenresHOC(Genres);

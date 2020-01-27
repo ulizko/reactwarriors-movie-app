@@ -5,11 +5,14 @@ import Filters from './Filters/Filters';
 import MoviesList from './Movies/MoviesList';
 import Pagination from './Filters/Pagination';
 import Header from './Header/Header';
+import LoginModal from './Header/Login/LoginModal';
 
-import { API_URL, API_KEY_3, fetchApi } from '../api/api';
+import CallApi from '../api/api';
 
 const SECONDS_PER_MONTH = 2592000;
 const cookies = new Cookies();
+
+export const AppContext = React.createContext();
 
 export default class App extends React.Component {
   constructor() {
@@ -26,22 +29,45 @@ export default class App extends React.Component {
       filters: { ...this.initialFilters },
       page: 1,
       total_pages: 1,
+      favorites: [],
+      bookmarks: [],
+      openLoginForm: false,
     };
   }
 
   componentDidMount() {
     const session_id = cookies.get('session_id');
     if (session_id) {
-      fetchApi(
-        `${API_URL}/account?api_key=${API_KEY_3}&session_id=${session_id}`
-      ).then(user => {
+      CallApi.get('/account', { params: { session_id } }).then(user => {
+        this.updateSessionId(session_id);
         this.updateUser(user);
       });
     }
   }
 
+  getFavorites = user => {
+    const { session_id } = this.state;
+    CallApi.get(`/account/${user.id}/favorite/movies`, {
+      params: { session_id },
+    }).then(data => {
+      this.setState({ favorites: data.results });
+    });
+  };
+
+  getBookmarks = user => {
+    const { session_id } = this.state;
+    CallApi.get(`/account/${user.id}/watchlist/movies`, {
+      params: { session_id },
+    }).then(data => {
+      this.setState({ bookmarks: data.results });
+    });
+  };
+
   updateUser = user => {
-    this.setState({ user });
+    this.setState({ user, openLoginForm: false }, () => {
+      this.getFavorites(user);
+      this.getBookmarks(user);
+    });
   };
 
   updateSessionId = session_id => {
@@ -50,6 +76,20 @@ export default class App extends React.Component {
       maxAge: SECONDS_PER_MONTH,
     });
     this.setState({ session_id });
+  };
+
+  onLogOut = () => {
+    this.setState(
+      {
+        user: null,
+        session_id: null,
+        favorites: [],
+        bookmarks: [],
+      },
+      () => {
+        cookies.remove('session_id');
+      }
+    );
   };
 
   onChangeFilters = event => {
@@ -76,15 +116,41 @@ export default class App extends React.Component {
     this.setState({ filters: this.initialFilters, page: 1 });
   };
 
+  updateFavorites = favorites => this.setState({ favorites });
+
+  updateBookmarks = bookmarks => this.setState({ bookmarks });
+
+  toggleModal = () => {
+    this.setState(prevState => ({ openLoginForm: !prevState.openLoginForm }));
+  };
+
   render() {
-    const { filters, page, total_pages, user } = this.state;
+    const {
+      filters,
+      page,
+      total_pages,
+      user,
+      favorites,
+      bookmarks,
+      openLoginForm,
+    } = this.state;
     return (
-      <React.Fragment>
-        <Header
-          user={user}
-          updateUser={this.updateUser}
-          updateSessionId={this.updateSessionId}
-        />
+      <AppContext.Provider
+        value={{
+          user,
+          updateUser: this.updateUser,
+          updateSessionId: this.updateSessionId,
+          onLogOut: this.onLogOut,
+          session_id: this.state.session_id,
+          favorites: favorites,
+          bookmarks: bookmarks,
+          toggleModal: this.toggleModal,
+          updateBookmarks: this.updateBookmarks,
+          updateFavorites: this.updateFavorites,
+        }}
+      >
+        <Header user={user} toggleModal={this.toggleModal} />
+        <LoginModal isOpen={openLoginForm} toggleModal={this.toggleModal} />
         <div className="container">
           <div className="row mt-4">
             <div className="col-4">
@@ -114,7 +180,7 @@ export default class App extends React.Component {
             </div>
           </div>
         </div>
-      </React.Fragment>
+      </AppContext.Provider>
     );
   }
 }
