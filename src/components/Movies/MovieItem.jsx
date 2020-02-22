@@ -1,7 +1,7 @@
 import React from 'react';
 import FavoriteButton from './FavoriteButton';
 import BookmarkButton from './BookmarkButton';
-
+import { Link } from 'react-router-dom';
 export default class MovieItem extends React.Component {
   render() {
     const { item } = this.props;
@@ -15,7 +15,9 @@ export default class MovieItem extends React.Component {
           alt={item.title}
         />
         <div className="card-body">
-          <h6 className="card-title">{item.title}</h6>
+          <h6 className="card-title">
+            <Link to={`/movie/${item.id}/detail`}>{item.title}</Link>
+          </h6>
           <div className="card-text">
             Рейтинг: {item.vote_average}
             <div className="icons">

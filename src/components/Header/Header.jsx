@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import LoginButton from './Login/LoginButton';
 import UserMenu from './UserMenu';
 export default class Header extends Component {
@@ -9,9 +10,9 @@ export default class Header extends Component {
         <div className="container">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a href="#home" className="nav-link">
+              <Link to="/" className="nav-link">
                 Home
-              </a>
+              </Link>
             </li>
           </ul>
           {user ? <UserMenu /> : <LoginButton toggleModal={toggleModal} />}

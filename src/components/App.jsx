@@ -1,11 +1,11 @@
 import React from 'react';
 import Cookies from 'universal-cookie';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-import Filters from './Filters/Filters';
-import MoviesList from './Movies/MoviesList';
-import Pagination from './Filters/Pagination';
 import Header from './Header/Header';
 import LoginModal from './Header/Login/LoginModal';
+import MoviesPage from './pages/MoviesPage/MoviesPage';
+import MoviePage from './pages/MoviePage/MoviePage';
 
 import CallApi from '../api/api';
 
@@ -18,17 +18,9 @@ export default class App extends React.Component {
   constructor() {
     super();
 
-    this.initialFilters = {
-      primary_release_year: '',
-      sort_by: 'popularity.desc',
-      with_genres: [],
-    };
     this.state = {
       session_id: null,
       user: null,
-      filters: { ...this.initialFilters },
-      page: 1,
-      total_pages: 1,
       favorites: [],
       bookmarks: [],
       openLoginForm: false,
@@ -92,30 +84,6 @@ export default class App extends React.Component {
     );
   };
 
-  onChangeFilters = event => {
-    const { name, value } = event.target;
-    this.setState(prevState => {
-      return {
-        filters: {
-          ...prevState.filters,
-          [name]: value,
-        },
-      };
-    });
-  };
-
-  onChangePage = page => {
-    this.setState({ page });
-  };
-
-  setTotalPages = total_pages => {
-    this.setState({ total_pages });
-  };
-
-  resetFilters = () => {
-    this.setState({ filters: this.initialFilters, page: 1 });
-  };
-
   updateFavorites = favorites => this.setState({ favorites });
 
   updateBookmarks = bookmarks => this.setState({ bookmarks });
@@ -125,62 +93,29 @@ export default class App extends React.Component {
   };
 
   render() {
-    const {
-      filters,
-      page,
-      total_pages,
-      user,
-      favorites,
-      bookmarks,
-      openLoginForm,
-    } = this.state;
+    const { user, favorites, bookmarks, openLoginForm } = this.state;
     return (
-      <AppContext.Provider
-        value={{
-          user,
-          updateUser: this.updateUser,
-          updateSessionId: this.updateSessionId,
-          onLogOut: this.onLogOut,
-          session_id: this.state.session_id,
-          favorites: favorites,
-          bookmarks: bookmarks,
-          toggleModal: this.toggleModal,
-          updateBookmarks: this.updateBookmarks,
-          updateFavorites: this.updateFavorites,
-        }}
-      >
-        <Header user={user} toggleModal={this.toggleModal} />
-        <LoginModal isOpen={openLoginForm} toggleModal={this.toggleModal} />
-        <div className="container">
-          <div className="row mt-4">
-            <div className="col-4">
-              <div className="card">
-                <div className="card-body">
-                  <h3>Фильтры:</h3>
-                  <Filters
-                    filters={filters}
-                    onChangeFilters={this.onChangeFilters}
-                    resetFilters={this.resetFilters}
-                  />
-                </div>
-              </div>
-              <Pagination
-                page={page}
-                onChangePage={this.onChangePage}
-                total_pages={total_pages}
-              />
-            </div>
-            <div className="col-8">
-              <MoviesList
-                filters={filters}
-                page={page}
-                onChangePage={this.onChangePage}
-                setTotalPages={this.setTotalPages}
-              />
-            </div>
-          </div>
-        </div>
-      </AppContext.Provider>
+      <Router>
+        <AppContext.Provider
+          value={{
+            user,
+            updateUser: this.updateUser,
+            updateSessionId: this.updateSessionId,
+            onLogOut: this.onLogOut,
+            session_id: this.state.session_id,
+            favorites: favorites,
+            bookmarks: bookmarks,
+            toggleModal: this.toggleModal,
+            updateBookmarks: this.updateBookmarks,
+            updateFavorites: this.updateFavorites,
+          }}
+        >
+          <Header user={user} toggleModal={this.toggleModal} />
+          <LoginModal isOpen={openLoginForm} toggleModal={this.toggleModal} />
+          <Route exact path="/" component={MoviesPage} />
+          <Route path="/movie/:id" component={MoviePage} />
+        </AppContext.Provider>
+      </Router>
     );
   }
 }

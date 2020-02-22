@@ -15,3 +15,42 @@ body {
   bottom: -10px;
   right: 0;
 }
+
+.movie-page {
+  margin: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+.movie-page img {
+  max-width: 300px;
+}
+
+.movie-page .card-body {
+  position: relative;
+}
+.movie-page .card-body .nav-tabs {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.movie-page .nav-tabs .nav-item {
+  width: 33%;
+}
+
+.detail-name {
+  width: 20%;
+}
+
+.detail-value {
+  padding-left: 20px;
+  padding-top: 5px;
+}
+.badge {
+  margin: 3px;
+}
+
+.company-logo {
+  margin-right: 5px;
+}

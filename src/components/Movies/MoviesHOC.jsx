@@ -41,7 +41,7 @@ export default Component =>
         queryParams.with_genres = with_genres.join(',');
       }
 
-      CallApi.get('/discover/movie', queryParams).then(data => {
+      CallApi.get('/discover/movie', { params: queryParams }).then(data => {
         this.props.setTotalPages(data.total_pages);
         this.setState({
           movies: data.results,
@@ -51,7 +51,6 @@ export default Component =>
     };
 
     render() {
-      console.log('render');
       const { movies, loaded } = this.state;
       return (
         <React.Fragment>
